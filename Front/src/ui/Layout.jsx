@@ -7,7 +7,7 @@ function Layout() {
     <main className="bg-[#f5f7fb]">
       <div className="w-10/12 py-5 mx-auto">
         <div className="flex justify-between items-start">
-          <section className="w-1/4 inline-block bg-white rounded-lg">
+          <section className="w-1/4 inline-block bg-white rounded-lg relative">
             <div
               className="w-full flex flex-col max-h-[calc(100vh-40px)] overflow-y-scroll [&::-webkit-scrollbar]:w-[6px] 
               [&::-webkit-scrollbar-track]:bg-gray-100
@@ -235,7 +235,7 @@ function Layout() {
               </ul>
             </div>
           </section>
-          <section className="w-[74%] inline-block bg-white rounded-lg">
+          <section className="w-[74%] inline-block bg-white rounded-lg overflow-hidden relative">
             <Outlet />
           </section>
         </div>

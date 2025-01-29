@@ -9,7 +9,7 @@ function Layout() {
         <div className="flex justify-between items-start">
           <section className="w-1/4 inline-block bg-white rounded-lg relative">
             <div
-              className="w-full flex flex-col max-h-[calc(100vh-40px)] overflow-y-scroll [&::-webkit-scrollbar]:w-[6px] 
+              className="w-full flex flex-col max-h-[calc(100vh-40px)] overflow-y-scroll [&::-webkit-scrollbar]:w-[2px] 
               [&::-webkit-scrollbar-track]:bg-gray-100
               [&::-webkit-scrollbar-thumb]:bg-gray-300">
               <div className="px-3 py-2 flex justify-start items-center border-b border-b-gray-100">

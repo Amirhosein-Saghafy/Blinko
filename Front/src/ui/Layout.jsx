@@ -10,7 +10,7 @@ function Layout() {
         <div className="flex justify-between items-start">
           <section className="w-1/4 inline-block bg-white rounded-lg relative">
             <div
-              className="w-full flex flex-col max-h-[calc(100vh-40px)] overflow-y-scroll [&::-webkit-scrollbar]:w-[2px] 
+              className="w-full flex flex-col h-[calc(100vh-40px)] overflow-y-scroll [&::-webkit-scrollbar]:w-[2px] 
               [&::-webkit-scrollbar-track]:bg-gray-100
               [&::-webkit-scrollbar-thumb]:bg-gray-300"
             >

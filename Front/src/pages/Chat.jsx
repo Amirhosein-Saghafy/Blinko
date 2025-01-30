@@ -9,7 +9,7 @@ import ProfileImage from "../ui/ProfileImage";
 
 function Chat() {
   return (
-    <div className="min-h-[calc(100vh-40px)]">
+    <div className="h-[calc(100vh-40px)]">
       <div className="flex flex-col relative">
         <div className="flex justify-between items-center px-8 py-4">
           <div className="flex items-center">

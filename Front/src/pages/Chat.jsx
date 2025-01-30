@@ -5,6 +5,7 @@ import { CiSearch } from "react-icons/ci";
 import { LuSend } from "react-icons/lu";
 import { RiAttachment2 } from "react-icons/ri";
 import { BsEmojiSmile } from "react-icons/bs";
+import ProfileImage from "../ui/ProfileImage";
 
 function Chat() {
   return (
@@ -12,16 +13,7 @@ function Chat() {
       <div className="flex flex-col relative">
         <div className="flex justify-between items-center px-8 py-4">
           <div className="flex items-center">
-            <div className="w-10 h-10 relative">
-              <div className="w-3 h-3 rounded-full bg-white absolute top-0 right-0 flex items-center justify-center z-50">
-                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-              </div>
-              <img
-                src={profile}
-                alt="profile"
-                className="w-full h-full rounded-full"
-              />
-            </div>
+            <ProfileImage imagePath={profile} active={true} />
             <div className="flex flex-col ml-3">
               <span className="text-sm text-zinc-800 font-semibold">
                 Jennifer Fritz

@@ -1,6 +1,6 @@
 import login from "../assets/images/login.svg";
 
-const Login = () => {
+const Login = ({ action }) => {
   return (
     <main className="bg-[#f8fafb]">
       <div className="w-10/12 py-5 mx-auto">
@@ -17,12 +17,15 @@ const Login = () => {
           <div className="w-1/3 mt-8">
             <form action="" className="py-10 pl-5">
               <div className="mb-3">
-                <h4 className="text-3xl">Sign In</h4>
+                <h4 className="text-3xl">
+                  {action === "login" ? "Sign In" : "Sign Up"}
+                </h4>
               </div>
               <div className="mb-5">
                 <p className="text-zinc-400">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Saepe, doloremque.
+                  {action === "login"
+                    ? "Log in to access your chats and conversations anytime, seamlessly continuing where you left off!"
+                    : "Sign up to create an account and securely access your chats and conversations anytime!"}
                 </p>
               </div>
               <div className="mb-5">
@@ -39,16 +42,40 @@ const Login = () => {
                   placeholder="password"
                 />
               </div>
-              <div className="mb-3 flex justify-between items-center">
-                <div className="flex items-center">
-                  <input type="checkbox" name="remember" id="remember" className=""/>
-                  <label htmlFor="remember" className="text-zinc-500 text-sm ml-2">Remember me</label>
-                </div>
-                <div>
-                  <a href="#" className="text-xs text-zinc-500">Forgot Password</a>
-                </div>
-              </div>
-              <button type="submit" className="my-8 w-full py-4 bg-[#6c63ff] hover:bg-[#635cec] text-white outline-none rounded-md">Log In</button>
+              {action === "login" && (
+                <>
+                  <div className="mb-3 flex justify-between items-center">
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="remember"
+                        id="remember"
+                        className=""
+                      />
+                      <label
+                        htmlFor="remember"
+                        className="text-zinc-500 text-sm ml-2"
+                      >
+                        Remember me
+                      </label>
+                    </div>
+                    <div>
+                      <a
+                        href="#"
+                        className="text-xs text-zinc-500 decoration-solid decoration-1 underline underline-offset-2"
+                      >
+                        Forgot Password
+                      </a>
+                    </div>
+                  </div>
+                </>
+              )}
+              <button
+                type="submit"
+                className="my-8 w-full py-4 bg-[#6c63ff] hover:bg-[#635cec] text-white outline-none rounded-md"
+              >
+                {action === "login" ? "Log In" : "Sign Up"}
+              </button>
             </form>
           </div>
         </div>

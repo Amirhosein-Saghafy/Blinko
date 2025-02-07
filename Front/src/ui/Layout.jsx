@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import profile from "../assets/images/profile.jpg";
 import { CiSearch } from "react-icons/ci";
 import ProfileImage from "./ProfileImage";
@@ -6,6 +7,7 @@ import ProfileImage from "./ProfileImage";
 function Layout() {
   return (
     <main className="bg-[#f5f7fb]">
+      <Toaster />
       <div className="w-10/12 py-5 mx-auto">
         <div className="flex justify-between items-start">
           <section className="w-1/4 inline-block bg-white rounded-lg relative">

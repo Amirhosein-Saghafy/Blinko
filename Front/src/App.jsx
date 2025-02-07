@@ -3,6 +3,7 @@ import Layout from "./ui/Layout";
 import Home from "./pages/Home";
 import Chat from "./pages/Chat";
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 
 function App() {
   const router = createBrowserRouter([
@@ -21,11 +22,11 @@ function App() {
     },
     {
       path: "/login",
-      element: <Login action='login'/>,
+      element: <Login />,
     },
     {
       path: "/signup",
-      element: <Login action='signup'/>,
+      element: <Signup />,
     },
   ]);
 

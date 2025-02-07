@@ -15,11 +15,37 @@ exports.login = async (req, res) => {
     });
 
     if (user) {
-      res.status(200).json({ message: "Login successful" });
+      res.status(200).json({ message: "Login successful", data: user });
     } else {
-      res.status(401).json({ message: "Invalid credentials" });
+      res.status(401).json({ error: "Invalid credentials" });
     }
   } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+exports.signup = async (req, res) => {
+  const { SECRET_KEY } = process.env;
+
+  const { userName, password } = req.body;
+
+  try {
+    const hashedPassword = jwt.sign(password, SECRET_KEY);
+
+    const user = await userModel.create({
+      userName,
+      password: hashedPassword,
+      profileImage: "profile-default.png",
+    });
+
+    if (user) {
+      res
+        .status(200)
+        .json({ message: "Profile created successfully", data: user });
+    } else {
+      res.status(500).json({ error: "Internal server error" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
   }
 };

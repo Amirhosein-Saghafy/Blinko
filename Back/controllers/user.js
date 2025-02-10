@@ -43,9 +43,15 @@ exports.signup = async (req, res) => {
         .status(200)
         .json({ message: "Profile created successfully", data: user });
     } else {
-      res.status(500).json({ error: "Internal server error" });
+      res
+        .status(500)
+        .json({ error: "Request could not be confirmed, please try again" });
     }
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({
+      error: error.message.includes("duplicate")
+        ? "The username is already taken"
+        : "Internal server error",
+    });
   }
 };

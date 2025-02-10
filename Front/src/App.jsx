@@ -4,6 +4,8 @@ import Home from "./pages/Home";
 import Chat from "./pages/Chat";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import { Provider } from "react-redux";
+import store from "./store/store";
 
 function App() {
   const router = createBrowserRouter([
@@ -30,7 +32,11 @@ function App() {
     },
   ]);
 
-  return <RouterProvider router={router}></RouterProvider>;
+  return (
+    <Provider store={store}>
+      <RouterProvider router={router}></RouterProvider>
+    </Provider>
+  );
 }
 
 export default App;

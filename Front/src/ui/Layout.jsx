@@ -1,12 +1,32 @@
 import { Outlet } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-import profile from "../assets/images/profile.jpg";
 import { CiSearch } from "react-icons/ci";
 import ProfileImage from "./ProfileImage";
+import { useEffect, useState } from "react";
+import { GET_ALL_USERS } from "../constant/urls";
+import Loader from "./Loader";
 
 function Layout() {
+  const [users, setUsers] = useState(null);
+  const [loadingUsers, setLoadingUsers] = useState(false);
+
+  const getAllUsers = async () => {
+    setLoadingUsers(true);
+    setTimeout(async () => {
+      const response = await fetch(GET_ALL_USERS);
+      const result = await response.json();
+      setLoadingUsers(false);
+      setUsers(result.data);
+    }, 3000);
+  };
+
+  useEffect(() => {
+    getAllUsers();
+  }, []);
+
   return (
     <main className="bg-[#f5f7fb]">
+      {loadingUsers && <Loader />}
       <Toaster />
       <div className="w-10/12 py-5 mx-auto">
         <div className="flex justify-between items-start">
@@ -29,21 +49,40 @@ function Layout() {
                 </div>
               </div>
               <ul className="flex flex-col">
-                <li className="px-2 py-4 border-b border-b-gray-200 flex justify-between items-center">
-                  <ProfileImage imagePath={profile} active={true} />
-                  <div className="w-[80%]">
-                    <div className="w-full mb-1 flex justify-between items-center">
-                      <span className="font-semibold">John</span>
-                      <span className="text-gray-400 text-xs font-semibold">
-                        3:15 PM
-                      </span>
-                    </div>
-                    <p className="text-gray-500 text-xs">
-                      Lorem ipsum dolor sit amet.
+                {users ? (
+                  users.length !== 0 ? (
+                    users.map((user, i) => (
+                      <li
+                        className="px-2 py-4 border-b border-b-gray-200 flex justify-between items-center"
+                        key={i}
+                      >
+                        <ProfileImage imagePath={`http://127.0.0.1:8000/${user.profileImage}`} active={true} />
+                        <div className="w-[80%]">
+                          <div className="w-full mb-1 flex justify-between items-center">
+                            <span className="font-semibold">
+                              {user.userName}
+                            </span>
+                            <span className="text-gray-400 text-xs font-semibold">
+                              3:15 PM
+                            </span>
+                          </div>
+                          <p className="text-gray-500 text-xs">
+                            Lorem ipsum dolor sit amet.
+                          </p>
+                        </div>
+                      </li>
+                    ))
+                  ) : (
+                    <p className="mt-56 text-center font-semibold text-base">
+                      There is no user!
                     </p>
-                  </div>
-                </li>
-                <li className="px-2 py-4 border-b border-b-gray-200 flex justify-between items-center shadow-[2px_2px_10px_0px_rgb(240,240,240),-2px_-2px_10px_0px_rgb(240,240,240)]">
+                  )
+                ) : (
+                  <p className="mt-56 text-center font-semibold text-base">
+                    Loading ...
+                  </p>
+                )}
+                {/* <li className="px-2 py-4 border-b border-b-gray-200 flex justify-between items-center shadow-[2px_2px_10px_0px_rgb(240,240,240),-2px_-2px_10px_0px_rgb(240,240,240)]">
                   <ProfileImage imagePath={profile} active={true} />
                   <div className="w-[80%]">
                     <div className="w-full mb-1 flex justify-between items-center">
@@ -56,8 +95,8 @@ function Layout() {
                       Lorem ipsum dolor sit amet consectetur.
                     </p>
                   </div>
-                </li>
-                <li className="px-2 py-4 border-b border-b-gray-200 flex justify-between items-center">
+                </li> */}
+                {/* <li className="px-2 py-4 border-b border-b-gray-200 flex justify-between items-center">
                   <ProfileImage imagePath={profile} active={false} />
                   <div className="w-[80%]">
                     <div className="w-full mb-1 flex justify-between items-center">
@@ -70,91 +109,7 @@ function Layout() {
                       Lorem ipsum dolor sit amet consectetur.
                     </p>
                   </div>
-                </li>
-                <li className="px-2 py-4 border-b border-b-gray-200 flex justify-between items-center">
-                  <ProfileImage imagePath={profile} active={true} />
-                  <div className="w-[80%]">
-                    <div className="w-full mb-1 flex justify-between items-center">
-                      <span className="font-semibold">John</span>
-                      <span className="text-gray-400 text-xs font-semibold">
-                        3:15 PM
-                      </span>
-                    </div>
-                    <p className="text-gray-500 text-xs">
-                      Lorem ipsum dolor sit amet.
-                    </p>
-                  </div>
-                </li>
-                <li className="px-2 py-4 border-b border-b-gray-200 flex justify-between items-center">
-                  <ProfileImage imagePath={profile} active={false} />
-                  <div className="w-[80%]">
-                    <div className="w-full mb-1 flex justify-between items-center">
-                      <span className="font-semibold">John</span>
-                      <span className="text-gray-400 text-xs font-semibold">
-                        3:15 PM
-                      </span>
-                    </div>
-                    <p className="text-gray-500 text-xs">
-                      Lorem ipsum dolor sit amet consectetur.
-                    </p>
-                  </div>
-                </li>
-                <li className="px-2 py-4 border-b border-b-gray-200 flex justify-between items-center">
-                  <ProfileImage imagePath={profile} active={true} />
-                  <div className="w-[80%]">
-                    <div className="w-full mb-1 flex justify-between items-center">
-                      <span className="font-semibold">John</span>
-                      <span className="text-gray-400 text-xs font-semibold">
-                        3:15 PM
-                      </span>
-                    </div>
-                    <p className="text-gray-500 text-xs">
-                      Lorem ipsum dolor sit amet.
-                    </p>
-                  </div>
-                </li>
-                <li className="px-2 py-4 border-b border-b-gray-200 flex justify-between items-center">
-                  <ProfileImage imagePath={profile} active={true} />
-                  <div className="w-[80%]">
-                    <div className="w-full mb-1 flex justify-between items-center">
-                      <span className="font-semibold">John</span>
-                      <span className="text-gray-400 text-xs font-semibold">
-                        3:15 PM
-                      </span>
-                    </div>
-                    <p className="text-gray-500 text-xs">
-                      Lorem ipsum dolor sit amet.
-                    </p>
-                  </div>
-                </li>
-                <li className="px-2 py-4 border-b border-b-gray-200 flex justify-between items-center">
-                  <ProfileImage imagePath={profile} active={true} />
-                  <div className="w-[80%]">
-                    <div className="w-full mb-1 flex justify-between items-center">
-                      <span className="font-semibold">John</span>
-                      <span className="text-gray-400 text-xs font-semibold">
-                        3:15 PM
-                      </span>
-                    </div>
-                    <p className="text-gray-500 text-xs">
-                      Lorem ipsum dolor sit amet.
-                    </p>
-                  </div>
-                </li>
-                <li className="px-2 py-4 border-b border-b-gray-200 flex justify-between items-center">
-                  <ProfileImage imagePath={profile} active={true} />
-                  <div className="w-[80%]">
-                    <div className="w-full mb-1 flex justify-between items-center">
-                      <span className="font-semibold">John</span>
-                      <span className="text-gray-400 text-xs font-semibold">
-                        3:15 PM
-                      </span>
-                    </div>
-                    <p className="text-gray-500 text-xs">
-                      Lorem ipsum dolor sit amet.
-                    </p>
-                  </div>
-                </li>
+                </li> */}
               </ul>
             </div>
           </section>

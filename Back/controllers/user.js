@@ -55,3 +55,8 @@ exports.signup = async (req, res) => {
     });
   }
 };
+
+exports.getAllUsers = async (req, res) => {
+  const users = await userModel.find().select(["userName", "profileImage"]);
+  res.status(200).json({ data: users });
+};

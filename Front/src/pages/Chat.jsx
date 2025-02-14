@@ -6,10 +6,18 @@ import { LuSend } from "react-icons/lu";
 import { RiAttachment2 } from "react-icons/ri";
 import { BsEmojiSmile } from "react-icons/bs";
 import ProfileImage from "../ui/ProfileImage";
+import { useRef, useState } from "react";
 
 function Chat() {
+  const [showEmojiBox, setShowEmojiBox] = useState(false);
+
+  const messageInputRef = useRef();
+
   return (
-    <div className="h-[calc(100vh-40px)]">
+    <div
+      className="h-[calc(100vh-40px)]"
+      onClick={() => setShowEmojiBox(false)}
+    >
       <div className="flex flex-col relative">
         <div className="flex justify-between items-center px-8 py-4">
           <div className="flex items-center">
@@ -125,17 +133,22 @@ function Chat() {
           </div>
         </div>
         <div className="flex justify-between items-center px-8 py-3 border-t border-t-[#f8f8f8]">
-          <div>
-            <input
-              type="text"
-              name="message"
-              placeholder="Type a message"
-              className=" placeholder:text-zinc-500 text-xs font-semibold outline-none"
-            />
-          </div>
+          <input
+            type="text"
+            name="message"
+            placeholder="Type a message"
+            className=" placeholder:text-zinc-500 text-zinc-800 text-sm font-semibold outline-none w-full pr-5"
+            ref={messageInputRef}
+          />
           <div className="flex items-center">
             <div className="flex mr-4">
-              <label className="cursor-pointer mr-3">
+              <label
+                className="cursor-pointer mr-3"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowEmojiBox(!showEmojiBox);
+                }}
+              >
                 <BsEmojiSmile color="rgb(112,112,132)" size="20px" />
               </label>
               <EmojiPicker
@@ -144,7 +157,10 @@ function Chat() {
                 height="400px"
                 width="350px"
                 emojiStyle="apple"
-                open={false}
+                open={showEmojiBox}
+                onEmojiClick={(emoji) =>
+                  (messageInputRef.current.value += emoji.emoji)
+                }
               />
               <label htmlFor="attachment" className="cursor-pointer">
                 <RiAttachment2 color="rgb(112,112,132)" size="20px" />

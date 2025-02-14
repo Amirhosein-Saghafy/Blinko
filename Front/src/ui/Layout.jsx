@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { CiSearch } from "react-icons/ci";
 import ProfileImage from "./ProfileImage";
@@ -23,6 +23,8 @@ function Layout() {
   useEffect(() => {
     getAllUsers();
   }, []);
+
+  const navigate = useNavigate();
 
   return (
     <main className="bg-[#f5f7fb]">
@@ -53,10 +55,14 @@ function Layout() {
                   users.length !== 0 ? (
                     users.map((user, i) => (
                       <li
-                        className="px-2 py-4 border-b border-b-gray-200 flex justify-between items-center"
+                        className="px-2 py-4 border-b border-b-gray-200 flex justify-between items-center cursor-pointer"
                         key={i}
+                        onClick={() => navigate(`/chat/${user._id}`)}
                       >
-                        <ProfileImage imagePath={`http://127.0.0.1:8000/${user.profileImage}`} active={true} />
+                        <ProfileImage
+                          imagePath={`http://127.0.0.1:8000/${user.profileImage}`}
+                          active={true}
+                        />
                         <div className="w-[80%]">
                           <div className="w-full mb-1 flex justify-between items-center">
                             <span className="font-semibold">

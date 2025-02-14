@@ -17,6 +17,10 @@ const chatSchema = new mongoose.Schema({
     type: Boolean,
     required: true,
   },
+  postedAt: {
+    type: Date,
+    default: new Date(),
+  },
 });
 
 const chatModel = mongoose.model("chat", chatSchema);

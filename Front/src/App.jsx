@@ -17,7 +17,7 @@ function App() {
           index: true,
         },
         {
-          path: "/chat",
+          path: "/chat/:id",
           element: <Chat />,
         },
       ],

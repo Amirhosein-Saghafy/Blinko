@@ -1,9 +1,9 @@
 const jwt = require("jsonwebtoken");
 const userModel = require("../models/user");
 const bcrypt = require("bcryptjs");
+const { generateToken } = require("../lib/utils");
 
 exports.login = async (req, res) => {
-  const { SECRET_KEY } = process.env;
   let user = null;
 
   try {
@@ -49,15 +49,7 @@ exports.login = async (req, res) => {
         password: hashedPassword,
       };
 
-      const token = jwt.sign(userData, SECRET_KEY);
-
-      res.cookie("token", token, {
-        maxAge: 3600000,
-        secure: false,
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-      });
+      generateToken(userData, res);
 
       res.status(200).json({ message: "Login successful", data: user });
     }
@@ -67,8 +59,6 @@ exports.login = async (req, res) => {
 };
 
 exports.signup = async (req, res) => {
-  const { SECRET_KEY } = process.env;
-
   const userCredentials = req.body;
 
   try {
@@ -87,15 +77,8 @@ exports.signup = async (req, res) => {
         password: hashedPassword,
       };
 
-      const token = jwt.sign(userData, SECRET_KEY);
+      generateToken(userData, res);
 
-      res.cookie("token", token, {
-        maxAge: 3600000,
-        secure: false,
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-      });
       res
         .status(200)
         .json({ message: "Profile created successfully", data: user });

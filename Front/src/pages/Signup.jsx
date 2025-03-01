@@ -20,6 +20,7 @@ const formActionHandler = async (previousState, formData) => {
         },
         method: "POST",
         body: requestBody,
+        credentials: "include",
       });
 
       const result = await response.json();

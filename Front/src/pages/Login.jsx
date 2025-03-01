@@ -1,11 +1,11 @@
-import { useActionState, useEffect } from "react";
+import { useActionState, useCallback, useEffect } from "react";
 import login from "../assets/images/login.svg";
 import { LOGIN } from "../constant/urls";
 import toast, { Toaster } from "react-hot-toast";
 import store from "../store/store";
 import { loginUser } from "../store/userSlice";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
 
 const formActionHandler = async (previousState, formData) => {
   toast.promise(
@@ -20,10 +20,10 @@ const formActionHandler = async (previousState, formData) => {
         },
         method: "POST",
         body: requestBody,
+        credentials: "include",
       });
 
       const result = await response.json();
-
       if (result.error) return Promise.reject(result.error);
 
       store.dispatch(loginUser(result.data));
@@ -42,6 +42,28 @@ const Login = () => {
   const userState = useSelector((state) => state.user);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const checkAuthentication = useCallback(async () => {
+    try {
+      const response = await fetch(LOGIN, {
+        credentials: "include",
+        method: "POST",
+      });
+
+      if (response.status === 200) {
+        const result = await response.json();
+
+        dispatch(loginUser(result.data));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    checkAuthentication();
+  }, [checkAuthentication]);
 
   useEffect(() => {
     if (userState) navigate("/");

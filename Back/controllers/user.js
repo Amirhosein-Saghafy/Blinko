@@ -1,4 +1,3 @@
-const jwt = require("jsonwebtoken");
 const userModel = require("../models/user");
 const bcrypt = require("bcryptjs");
 const { generateToken } = require("../lib/utils");
@@ -80,7 +79,7 @@ exports.signup = async (req, res) => {
       generateToken(userData, res);
 
       res
-        .status(200)
+        .status(201)
         .json({ message: "Profile created successfully", data: user });
     } else {
       res

@@ -95,6 +95,16 @@ exports.signup = async (req, res) => {
   }
 };
 
+exports.logout = async (req, res) => {
+  try {
+    res.cookie("token", "", { maxAge: 0 });
+    res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 exports.getAllUsers = async (req, res) => {
   const users = await userModel.find().select(["userName", "profileImage"]);
   res.status(200).json({ data: users });

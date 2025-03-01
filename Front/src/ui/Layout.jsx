@@ -2,29 +2,65 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { CiSearch } from "react-icons/ci";
 import ProfileImage from "./ProfileImage";
-import { useEffect, useState } from "react";
-import { GET_ALL_USERS } from "../constant/urls";
+import { useCallback, useEffect, useState } from "react";
+import { GET_ALL_USERS, LOGIN } from "../constant/urls";
 import Loader from "./Loader";
+import { connect } from "../utilities/socket";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../store/userSlice";
 
 function Layout() {
   const [users, setUsers] = useState(null);
   const [loadingUsers, setLoadingUsers] = useState(false);
+  const userState = useSelector((state) => state.user);
 
-  const getAllUsers = async () => {
-    setLoadingUsers(true);
-    setTimeout(async () => {
-      const response = await fetch(GET_ALL_USERS);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const getAllUsers = useCallback(async () => {
+    try {
+      setLoadingUsers(true);
+      const response = await fetch(GET_ALL_USERS, { credentials: "include" });
       const result = await response.json();
-      setLoadingUsers(false);
+      if (result.error) throw new Error(result.error);
       setUsers(result.data);
-    }, 3000);
-  };
+    } catch (error) {
+      if (error === "Invalid credentials") navigate("/login");
+    } finally {
+      setLoadingUsers(false);
+    }
+  }, [navigate]);
+
+  const checkAuthentication = useCallback(async () => {
+    try {
+      const response = await fetch(LOGIN, {
+        credentials: "include",
+        method: "POST",
+      });
+
+      if (response.status === 200) {
+        const result = await response.json();
+
+        dispatch(loginUser(result.data));
+      } else {
+        navigate("/login");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [dispatch, navigate]);
+
+  useEffect(() => {
+    connect();
+  }, []);
 
   useEffect(() => {
     getAllUsers();
-  }, []);
+  }, [getAllUsers]);
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    if (!userState) checkAuthentication();
+  }, [checkAuthentication, userState]);
 
   return (
     <main className="bg-[#f5f7fb]">

@@ -1,23 +1,65 @@
 const jwt = require("jsonwebtoken");
 const userModel = require("../models/user");
+const bcrypt = require("bcryptjs");
 
 exports.login = async (req, res) => {
   const { SECRET_KEY } = process.env;
-
-  const { userName, password } = req.body;
+  let user = null;
 
   try {
-    const hashedPassword = jwt.sign(password, SECRET_KEY);
+    if (req.userName && req.password) {
+      user = await userModel.findOne({
+        userName: req.userName,
+        password: req.password,
+      });
 
-    const user = await userModel.findOne({
-      userName,
-      password: hashedPassword,
-    });
-
-    if (user) {
-      res.status(200).json({ message: "Login successful", data: user });
+      if (user) {
+        res.status(200).json({ message: "Login successful", data: user });
+        return;
+      } else {
+        res.status(401).json({ error: "Invalid credentials" });
+        return;
+      }
     } else {
-      res.status(401).json({ error: "Invalid credentials" });
+      const userCredentials = req.body;
+
+      user = await userModel.findOne({
+        userName: userCredentials.userName,
+      });
+
+      if (!user) {
+        res.status(401).json({ error: "Invalid credentials" });
+        return;
+      }
+
+      const hashedPassword = user.password;
+
+      const isValid = await bcrypt.compare(
+        userCredentials.password,
+        hashedPassword
+      );
+
+      if (!isValid) {
+        res.status(401).json({ error: "The password is incorrect" });
+        return;
+      }
+
+      const userData = {
+        userName: userCredentials.userName,
+        password: hashedPassword,
+      };
+
+      const token = jwt.sign(userData, SECRET_KEY);
+
+      res.cookie("token", token, {
+        maxAge: 3600000,
+        secure: false,
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+      });
+
+      res.status(200).json({ message: "Login successful", data: user });
     }
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
@@ -27,18 +69,33 @@ exports.login = async (req, res) => {
 exports.signup = async (req, res) => {
   const { SECRET_KEY } = process.env;
 
-  const { userName, password } = req.body;
+  const userCredentials = req.body;
 
   try {
-    const hashedPassword = jwt.sign(password, SECRET_KEY);
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(userCredentials.password, salt);
 
     const user = await userModel.create({
-      userName,
+      userName: userCredentials.userName,
       password: hashedPassword,
       profileImage: "profile-default.png",
     });
 
     if (user) {
+      const userData = {
+        userName: userCredentials.userName,
+        password: hashedPassword,
+      };
+
+      const token = jwt.sign(userData, SECRET_KEY);
+
+      res.cookie("token", token, {
+        maxAge: 3600000,
+        secure: false,
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+      });
       res
         .status(200)
         .json({ message: "Profile created successfully", data: user });

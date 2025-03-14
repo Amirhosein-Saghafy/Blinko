@@ -169,6 +169,8 @@ exports.updateProfile = async (req, res) => {
 };
 
 exports.getAllUsers = async (req, res) => {
-  const users = await userModel.find().select(["userName", "profileImage"]);
+  const users = await userModel
+    .find({ userName: { $ne: req.userName } })
+    .select(["userName", "profileImage"]);
   res.status(200).json({ data: users });
 };

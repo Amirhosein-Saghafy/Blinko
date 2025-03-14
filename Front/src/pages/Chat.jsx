@@ -7,9 +7,11 @@ import { RiAttachment2 } from "react-icons/ri";
 import { BsEmojiSmile } from "react-icons/bs";
 import ProfileImage from "../ui/ProfileImage";
 import { useRef, useState } from "react";
+import { useLoaderData } from "react-router";
 
 function Chat() {
   const [showEmojiBox, setShowEmojiBox] = useState(false);
+  const data = useLoaderData();
 
   const messageInputRef = useRef();
 

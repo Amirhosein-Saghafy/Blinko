@@ -4,9 +4,10 @@ import Home from "./pages/Home";
 import Chat from "./pages/Chat";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import { Provider } from "react-redux";
-import store from "./store/store";
 import Profile from "./pages/Profile";
+import store from "./store/store";
+import { Provider } from "react-redux";
+import chatLoader from "./utils/chatLoader";
 
 function App() {
   const router = createBrowserRouter([
@@ -20,6 +21,7 @@ function App() {
         {
           path: "/chat/:id",
           element: <Chat />,
+          loader: chatLoader,
         },
         {
           path: "/profile",

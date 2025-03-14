@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import { Provider } from "react-redux";
 import store from "./store/store";
+import Profile from "./pages/Profile";
 
 function App() {
   const router = createBrowserRouter([
@@ -19,6 +20,10 @@ function App() {
         {
           path: "/chat/:id",
           element: <Chat />,
+        },
+        {
+          path: "/profile",
+          element: <Profile />,
         },
       ],
     },

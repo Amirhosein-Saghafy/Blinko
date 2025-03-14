@@ -9,10 +9,12 @@ import Loader from "./Loader";
 import { connect } from "../utils/socket";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../store/userSlice";
+import { selectUser } from "../store/chatSlice";
 
 function Layout() {
   const [users, setUsers] = useState(null);
   const [loadingUsers, setLoadingUsers] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
   const navigation = useNavigation();
   const user = useSelector((state) => state.user);
 
@@ -101,9 +103,15 @@ function Layout() {
                     users.length !== 0 ? (
                       users.map((user, i) => (
                         <li
-                          className="px-2 py-4 border-b border-b-gray-200 flex justify-between items-center cursor-pointer"
+                          className={`px-2 py-4 border-b border-b-slate-100 flex justify-between items-center cursor-pointer ${
+                            user._id === selectedUser?._id ? "bg-slate-100" : ""
+                          }`}
                           key={i}
-                          onClick={() => navigate(`/chat/${user._id}`)}
+                          onClick={() => {
+                            setSelectedUser(user);
+                            dispatch(selectUser(user));
+                            navigate(`/chat/${user._id}`);
+                          }}
                         >
                           <ProfileImage
                             imagePath={`http://127.0.0.1:8000/${user.profileImage}`}

@@ -28,7 +28,7 @@ exports.getAll = async (req, res) => {
   }
 };
 
-exports.send = async (req, res) => {
+exports.sendMessage = async (req, res) => {
   try {
     const myUser = await userModel.findOne({
       userName: req.userName,

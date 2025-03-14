@@ -7,6 +7,6 @@ const router = express.Router();
 router.use(authController.authentication);
 
 router.get("/all/:id", chatController.getAll);
-router.post("/send", chatController.send);
+router.post("/send", chatController.sendMessage);
 
 module.exports = router;

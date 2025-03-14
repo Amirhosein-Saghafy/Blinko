@@ -105,6 +105,69 @@ exports.logout = async (req, res) => {
   }
 };
 
+exports.updateProfile = async (req, res) => {
+  const { userName, password } = req.body;
+  const file = req.file;
+
+  const numberOfDocs = await userModel.countDocuments({ userName });
+
+  if (req.userName !== userName && numberOfDocs > 0) {
+    res.status(401).json({ error: "The username is already taken" });
+    return;
+  }
+
+  let hashedPassword;
+
+  if (password) {
+    const salt = await bcrypt.genSalt();
+    hashedPassword = await bcrypt.hash(password, salt);
+  }
+
+  try {
+    let user = await userModel.findOneAndUpdate(
+      {
+        userName: req.userName,
+        password: req.password,
+      },
+      {
+        userName: userName || req.userName,
+        password: hashedPassword || req.password,
+      },
+      { new: true }
+    );
+
+    if (!user) {
+      res.status(401).json({ error: "The user not founded" });
+      return;
+    }
+
+    if (file) {
+      user = await userModel.findOneAndUpdate(
+        {
+          userName: user.userName,
+          password: user.password,
+        },
+        { profileImage: file.filename },
+        { new: true }
+      );
+    }
+
+    const userData = {
+      userName: user.userName,
+      password: user.password,
+    };
+
+    generateToken(userData, res);
+
+    res
+      .status(200)
+      .json({ message: "profile successfully updated", data: user });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 exports.getAllUsers = async (req, res) => {
   const users = await userModel.find().select(["userName", "profileImage"]);
   res.status(200).json({ data: users });

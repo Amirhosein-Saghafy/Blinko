@@ -1,18 +1,19 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { CiSearch } from "react-icons/ci";
+import { LuUserRound } from "react-icons/lu";
 import ProfileImage from "./ProfileImage";
 import { useCallback, useEffect, useState } from "react";
 import { GET_ALL_USERS, LOGIN } from "../constant/urls";
 import Loader from "./Loader";
-import { connect } from "../utilities/socket";
+import { connect } from "../utils/socket";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../store/userSlice";
 
 function Layout() {
   const [users, setUsers] = useState(null);
   const [loadingUsers, setLoadingUsers] = useState(false);
-  const userState = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -56,11 +57,11 @@ function Layout() {
 
   useEffect(() => {
     getAllUsers();
-  }, [getAllUsers]);
+  }, [getAllUsers, user]);
 
   useEffect(() => {
-    if (!userState) checkAuthentication();
-  }, [checkAuthentication, userState]);
+    if (!user) checkAuthentication();
+  }, [checkAuthentication, user]);
 
   return (
     <main className="bg-[#f5f7fb]">
@@ -85,6 +86,12 @@ function Layout() {
                     placeholder="Search ..."
                   />
                 </div>
+                <button
+                  className="py-2 ml-auto mr-2"
+                  onClick={() => navigate("/profile")}
+                >
+                  <LuUserRound size="20px" color="rgb(148, 148, 156)" />
+                </button>
               </div>
               <ul className="flex flex-col">
                 {users ? (
@@ -124,34 +131,6 @@ function Layout() {
                     Loading ...
                   </p>
                 )}
-                {/* <li className="px-2 py-4 border-b border-b-gray-200 flex justify-between items-center shadow-[2px_2px_10px_0px_rgb(240,240,240),-2px_-2px_10px_0px_rgb(240,240,240)]">
-                  <ProfileImage imagePath={profile} active={true} />
-                  <div className="w-[80%]">
-                    <div className="w-full mb-1 flex justify-between items-center">
-                      <span className="font-semibold">John</span>
-                      <span className="text-gray-400 text-xs font-semibold">
-                        3:15 PM
-                      </span>
-                    </div>
-                    <p className="text-gray-500 text-xs">
-                      Lorem ipsum dolor sit amet consectetur.
-                    </p>
-                  </div>
-                </li> */}
-                {/* <li className="px-2 py-4 border-b border-b-gray-200 flex justify-between items-center">
-                  <ProfileImage imagePath={profile} active={false} />
-                  <div className="w-[80%]">
-                    <div className="w-full mb-1 flex justify-between items-center">
-                      <span className="font-semibold">John</span>
-                      <span className="text-gray-400 text-xs font-semibold">
-                        3:15 PM
-                      </span>
-                    </div>
-                    <p className="text-gray-500 text-xs">
-                      Lorem ipsum dolor sit amet consectetur.
-                    </p>
-                  </div>
-                </li> */}
               </ul>
             </div>
           </section>

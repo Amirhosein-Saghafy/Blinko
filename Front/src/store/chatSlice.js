@@ -2,10 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const chatSlice = createSlice({
   name: "chat",
-  initialState: null,
+  initialState: {
+    selectedUser: null,
+    onlineUsers: [],
+  },
   reducers: {
     selectUser(prevState, action) {
-      prevState = action.payload;
+      prevState.selectedUser = action.payload;
       return prevState;
     },
   },

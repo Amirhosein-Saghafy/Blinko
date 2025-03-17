@@ -18,5 +18,5 @@ const chatSlice = createSlice({
   },
 });
 
-export const { selectUser } = chatSlice.actions;
+export const { selectUser, updateOnlineUsersList } = chatSlice.actions;
 export default chatSlice.reducer;

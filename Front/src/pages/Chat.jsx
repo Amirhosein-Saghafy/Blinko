@@ -15,7 +15,7 @@ import { formatMessageTime } from "../utils/utils";
 function Chat() {
   const [showEmojiBox, setShowEmojiBox] = useState(false);
   const { data } = useLoaderData();
-  const { user: myUser, chat: chatSelected } = useSelector((state) => state);
+  const { user: myUser, chat } = useSelector((state) => state);
 
   const { id: userId } = useParams();
 
@@ -50,12 +50,12 @@ function Chat() {
         <div className="flex justify-between items-center px-8 py-4">
           <div className="flex items-center">
             <ProfileImage
-              imagePath={`http://127.0.0.1:8000/${chatSelected.profileImage}`}
+              imagePath={`http://127.0.0.1:8000/${chat?.selectedUser.profileImage}`}
               active={true}
             />
             <div className="flex flex-col ml-3">
               <span className="text-sm text-zinc-800 font-semibold">
-                {chatSelected?.userName}
+                {chat?.selectedUser.userName}
               </span>
               <span className="text-xs text-gray-400 font-semibold">
                 Active Now
@@ -76,12 +76,12 @@ function Chat() {
               [&::-webkit-scrollbar-track]:bg-gray-100
               [&::-webkit-scrollbar-thumb]:bg-gray-300"
         >
-          {data.map((chat) => {
-            if (chat.senderId === myUser._id) {
+          {data.map((message) => {
+            if (message.senderId === myUser._id) {
               return (
                 <div
                   className="flex items-end mt-10 ml-auto flex-row-reverse"
-                  key={chat._id}
+                  key={message._id}
                 >
                   <div className="w-10 h-10 relative ml-5">
                     <img
@@ -91,27 +91,27 @@ function Chat() {
                     />
                   </div>
                   <div className="px-5 py-3 bg-[#f7f7f7] rounded-t-2xl rounded-es-2xl max-w-[450px] ml-5">
-                    <p className="text-zinc-500 text-sm">{chat.content}</p>
+                    <p className="text-zinc-500 text-sm">{message.content}</p>
                   </div>
                   <span className="text-gray-400 text-xs">
-                    {formatMessageTime(chat.postedAt)}
+                    {formatMessageTime(message.postedAt)}
                   </span>
                 </div>
               );
-            } else if (chat.receiverId === myUser._id) {
+            } else if (message.receiverId === myUser._id) {
               return (
-                <div className="flex items-end" key={chat._id}>
+                <div className="flex items-end" key={message._id}>
                   <div className="w-10 h-10 relative mr-5">
                     <img
-                      src={`http://127.0.0.1:8000/${chatSelected.profileImage}`}
+                      src={`http://127.0.0.1:8000/${chat?.selectedUser.profileImage}`}
                       alt="profile"
                       className="w-full h-full rounded-full"
                     />
                   </div>
                   <div className="px-5 py-3 bg-[#ecf3fe] rounded-t-2xl rounded-ee-2xl max-w-[450px] mr-5">
-                    <p className="text-zinc-500 text-sm">{chat.content}</p>
+                    <p className="text-zinc-500 text-sm">{message.content}</p>
                   </div>
-                  <span className="text-gray-400 text-xs">{formatMessageTime(chat.postedAt)}</span>
+                  <span className="text-gray-400 text-xs">{formatMessageTime(message.postedAt)}</span>
                 </div>
               );
             }

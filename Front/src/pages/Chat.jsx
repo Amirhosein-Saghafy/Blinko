@@ -51,7 +51,7 @@ function Chat() {
           <div className="flex items-center">
             <ProfileImage
               imagePath={`http://127.0.0.1:8000/${chat?.selectedUser.profileImage}`}
-              active={true}
+              active={Object.keys(chat.onlineUsers).includes(userId)}
             />
             <div className="flex flex-col ml-3">
               <span className="text-sm text-zinc-800 font-semibold">

@@ -12,7 +12,7 @@ import { loginUser } from "../store/userSlice";
 import { selectUser } from "../store/chatSlice";
 
 function Layout() {
-  const user = useSelector((state) => state.user);
+  const {user, chat} = useSelector((state) => state);
 
   const [users, setUsers] = useState(null);
   const [loadingUsers, setLoadingUsers] = useState(false);
@@ -117,7 +117,7 @@ function Layout() {
                         >
                           <ProfileImage
                             imagePath={`http://127.0.0.1:8000/${user.profileImage}`}
-                            active={true}
+                            active={Object.keys(chat.onlineUsers).includes(user._id)}
                           />
                           <div className="w-[80%]">
                             <div className="w-full mb-1 flex justify-between items-center">

@@ -25,6 +25,9 @@ io.on("connection", (socket) => {
   console.log(`A user connected : ${socket.id}`);
   socket.on("disconnect", () => {
     delete users[socket.handshake.auth.userId];
+
+    io.emit("updateOnlineUsers", users);
+
     console.log(`User disconnected : ${socket.id}`);
   });
 });

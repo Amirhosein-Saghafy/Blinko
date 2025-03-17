@@ -11,6 +11,10 @@ const chatSlice = createSlice({
       prevState.selectedUser = action.payload;
       return prevState;
     },
+    updateOnlineUsersList(prevState, action){
+      prevState.onlineUsers = action.payload;
+      return prevState;
+    }
   },
 });
 

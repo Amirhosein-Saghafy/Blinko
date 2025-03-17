@@ -12,11 +12,13 @@ import { loginUser } from "../store/userSlice";
 import { selectUser } from "../store/chatSlice";
 
 function Layout() {
+  const user = useSelector((state) => state.user);
+
   const [users, setUsers] = useState(null);
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+
   const navigation = useNavigation();
-  const user = useSelector((state) => state.user);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -55,8 +57,8 @@ function Layout() {
   }, [dispatch, navigate]);
 
   useEffect(() => {
-    connect();
-  }, []);
+    if (user) connect(user._id);
+  }, [user]);
 
   useEffect(() => {
     getAllUsers();

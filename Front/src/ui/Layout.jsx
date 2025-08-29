@@ -1,24 +1,38 @@
-import { Outlet, useNavigate, useNavigation } from "react-router-dom";
+import {
+  Outlet,
+  useLocation,
+  useNavigate,
+  useNavigation,
+} from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { CiSearch } from "react-icons/ci";
 import { LuUserRound } from "react-icons/lu";
 import ProfileImage from "./ProfileImage";
 import { useCallback, useEffect, useState } from "react";
-import { GET_ALL_USERS, LOGIN } from "../constant/urls";
+import {
+  GET_ALL_USERS,
+  GET_LAST_MESSAGE_TIME,
+  GET_UNSEEN_MESSAGES,
+  LOGIN,
+} from "../constant/urls";
 import Loader from "./Loader";
-import { connect } from "../utils/socket";
+import { connect, getSocket } from "../utils/socket";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../store/userSlice";
 import { selectUser } from "../store/chatSlice";
+import { formatTimeAgo } from "../utils/utils";
 
 function Layout() {
-  const {user, chat} = useSelector((state) => state);
+  const { user, chat } = useSelector((state) => state);
 
   const [users, setUsers] = useState(null);
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [lastMessages, setLastMessages] = useState([]);
+  const [unseenMessages, setUnseenMessages] = useState([]);
 
   const navigation = useNavigation();
+  const location = useLocation();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -56,8 +70,68 @@ function Layout() {
     }
   }, [dispatch, navigate]);
 
+  const getLastMessageTime = useCallback(
+    async (users) => {
+      try {
+        if (!users) return;
+        const lastMessages = [];
+        for (let i = 0; i < users.length; i++) {
+          const response = await fetch(
+            `${GET_LAST_MESSAGE_TIME}/${users[i]._id}`,
+            {
+              credentials: "include",
+            }
+          );
+          const result = await response.json();
+
+          lastMessages.push({
+            userId: users[i]._id,
+            time: result.data.postedAt || "",
+            content: result.data.content || "",
+          });
+        }
+        setLastMessages(lastMessages);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [chat]
+  );
+
+  const getUnseenMessages = useCallback(
+    async (users) => {
+      try {
+        if (!users) return;
+        const unseenMessages = [];
+        for (let i = 0; i < users.length; i++) {
+          if (users[i]._id === chat?.selectedUser?._id) continue;
+
+          const response = await fetch(
+            `${GET_UNSEEN_MESSAGES}/${users[i]._id}`,
+            {
+              credentials: "include",
+            }
+          );
+
+          const result = await response.json();
+
+          if (result.data !== 0)
+            unseenMessages.push({
+              userId: users[i]._id,
+              count: result.data,
+            });
+        }
+
+        setUnseenMessages(unseenMessages);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [chat]
+  );
+
   useEffect(() => {
-    if (user) connect(user._id);
+    if (user && !getSocket()) connect(user._id);
   }, [user]);
 
   useEffect(() => {
@@ -68,11 +142,18 @@ function Layout() {
     if (!user) checkAuthentication();
   }, [checkAuthentication, user]);
 
+  useEffect(() => {
+    getLastMessageTime(users);
+  }, [users, getLastMessageTime, chat]);
+
+  useEffect(() => {
+    getUnseenMessages(users);
+  }, [getUnseenMessages, users]);
+
   return (
     <>
-      {navigation.state === "loading" && <Loader />}
       <main className="bg-[#f5f7fb]">
-        {loadingUsers && <Loader />}
+        {(loadingUsers || navigation.state === "loading") && <Loader />}
         <Toaster />
         <div className="w-10/12 py-5 mx-auto">
           <div className="flex justify-between items-start">
@@ -110,6 +191,8 @@ function Layout() {
                           }`}
                           key={i}
                           onClick={() => {
+                            if (location.pathname === `/chat/${user._id}`)
+                              return;
                             setSelectedUser(user);
                             dispatch(selectUser(user));
                             navigate(`/chat/${user._id}`);
@@ -117,20 +200,55 @@ function Layout() {
                         >
                           <ProfileImage
                             imagePath={`http://127.0.0.1:8000/${user.profileImage}`}
-                            active={Object.keys(chat.onlineUsers).includes(user._id)}
+                            active={Object.keys(chat.onlineUsers).includes(
+                              user._id
+                            )}
                           />
                           <div className="w-[80%]">
                             <div className="w-full mb-1 flex justify-between items-center">
                               <span className="font-semibold">
                                 {user.userName}
                               </span>
-                              <span className="text-gray-400 text-xs font-semibold">
-                                3:15 PM
+                              <span className="text-gray-400 text-xs font-semibold mr-1">
+                                {formatTimeAgo(
+                                  lastMessages.find(
+                                    (message) => message.userId === user._id
+                                  )?.time
+                                )}
                               </span>
                             </div>
-                            <p className="text-gray-500 text-xs">
-                              Lorem ipsum dolor sit amet.
-                            </p>
+                            <div className="w-full flex justify-between items-center">
+                              <p className="text-gray-400 text-xs">
+                                {lastMessages.find(
+                                  (message) => message.userId === user._id
+                                )?.content.length >= 15
+                                  ? lastMessages
+                                      .find(
+                                        (message) => message.userId === user._id
+                                      )
+                                      ?.content.slice(0, 14)
+                                      .padEnd(18, ".")
+                                  : lastMessages.find(
+                                      (message) => message.userId === user._id
+                                    )?.content}
+                              </p>
+                              {unseenMessages.some(
+                                (message) => message.userId === user._id
+                              ) && (
+                                <div className="mr-4">
+                                  <div className="w-[22px] h-[22px] rounded-full bg-green-400 flex items-center justify-center">
+                                    <span className="text-white text-xs font-semibold">
+                                      {
+                                        unseenMessages.find(
+                                          (message) =>
+                                            message.userId === user._id
+                                        ).count
+                                      }
+                                    </span>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </li>
                       ))

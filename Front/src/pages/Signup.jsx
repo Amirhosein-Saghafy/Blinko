@@ -1,11 +1,11 @@
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import login from "../assets/images/login.svg";
 import { SIGNUP } from "../constant/urls";
 import toast, { Toaster } from "react-hot-toast";
 import store from "../store/store";
 import { loginUser } from "../store/userSlice";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 
 const formActionHandler = async (previousState, formData) => {
   toast.promise(
@@ -43,6 +43,7 @@ const Signup = () => {
   const userState = useSelector((state) => state.user);
 
   const navigate = useNavigate();
+  const passwordRef = useRef();
 
   useEffect(() => {
     if (userState) navigate("/");
@@ -85,7 +86,37 @@ const Signup = () => {
                   name="password"
                   className="py-5 px-4 bg-gray-100 rounded-b-xl w-full outline-none text-sm placeholder:text-zinc-400 text-zinc-400"
                   placeholder="password"
+                  ref={passwordRef}
                 />
+              </div>
+              <div className="mb-3 flex justify-between items-center">
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    name="show-password"
+                    id="show-password"
+                    className=""
+                    onChange={(e) =>
+                      (passwordRef.current.type = e.target.checked
+                        ? "text"
+                        : "password")
+                    }
+                  />
+                  <label
+                    htmlFor="show-password"
+                    className="text-zinc-500 text-sm ml-2"
+                  >
+                    Show Password
+                  </label>
+                </div>
+                <div>
+                  <NavLink
+                    to="/login"
+                    className="text-xs text-zinc-500 decoration-solid decoration-1 underline underline-offset-2"
+                  >
+                    Already have an account? login
+                  </NavLink>
+                </div>
               </div>
               <button
                 type="submit"

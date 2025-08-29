@@ -1,10 +1,10 @@
-import { useActionState, useCallback, useEffect } from "react";
+import { useActionState, useCallback, useEffect, useRef } from "react";
 import login from "../assets/images/login.svg";
 import { LOGIN } from "../constant/urls";
 import toast, { Toaster } from "react-hot-toast";
 import store from "../store/store";
 import { loginUser } from "../store/userSlice";
-import { useNavigate } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 
 const formActionHandler = async (previousState, formData) => {
@@ -40,6 +40,8 @@ const formActionHandler = async (previousState, formData) => {
 const Login = () => {
   const [state, submitAction] = useActionState(formActionHandler, null);
   const userState = useSelector((state) => state.user);
+
+  const passwordRef = useRef();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -106,6 +108,7 @@ const Login = () => {
                   name="password"
                   className="py-5 px-4 bg-gray-100 rounded-b-xl w-full outline-none text-sm placeholder:text-zinc-400 text-zinc-400"
                   placeholder="password"
+                  ref={passwordRef}
                 />
               </div>
 
@@ -113,24 +116,29 @@ const Login = () => {
                 <div className="flex items-center">
                   <input
                     type="checkbox"
-                    name="remember"
-                    id="remember"
+                    name="show-password"
+                    id="show-password"
                     className=""
+                    onChange={(e) =>
+                      (passwordRef.current.type = e.target.checked
+                        ? "text"
+                        : "password")
+                    }
                   />
                   <label
-                    htmlFor="remember"
+                    htmlFor="show-password"
                     className="text-zinc-500 text-sm ml-2"
                   >
-                    Remember me
+                    Show Password
                   </label>
                 </div>
                 <div>
-                  <a
-                    href="#"
+                  <NavLink
+                    to="/signup"
                     className="text-xs text-zinc-500 decoration-solid decoration-1 underline underline-offset-2"
                   >
-                    Forgot Password
-                  </a>
+                    Don&apos;t have an account? create one
+                  </NavLink>
                 </div>
               </div>
 

@@ -11,7 +11,13 @@ const chatSchema = new mongoose.Schema({
   },
   content: {
     type: String,
-    required: true,
+    required: false,
+    defaultValue: "",
+  },
+  image: {
+    type: String,
+    required: false,
+    defaultValue: null,
   },
   seen: {
     type: Boolean,
@@ -19,7 +25,6 @@ const chatSchema = new mongoose.Schema({
   },
   postedAt: {
     type: Date,
-    default: new Date(),
   },
 });
 

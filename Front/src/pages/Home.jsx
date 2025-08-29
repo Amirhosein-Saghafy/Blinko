@@ -1,7 +1,33 @@
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import bg from "../assets/images/bg.jpg";
+import { getSocket } from "../utils/socket";
+import { useDispatch } from "react-redux";
+import { setNewMessage } from "../store/chatSlice";
 
 function Home() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    let socket, handler;
+    const socketFetcher = setInterval(() => {
+      socket = getSocket();
+      if (!socket) return;
+
+      handler = () => {
+        debugger;
+        dispatch(setNewMessage());
+      };
+
+      socket.on("newMessage", handler);
+      clearInterval(socketFetcher);
+    }, 100);
+
+    return () => {
+      clearInterval(socketFetcher); //if interval is still running
+      if (socket) socket.off("newMessage", handler);
+    };
+  }, [dispatch]);
+
   return (
     <Fragment>
       <img

@@ -1,4 +1,5 @@
-const BASE_URL = "http://localhost:8000";
+// const BASE_URL = "http://localhost:8000";
+const BASE_URL = "";
 const LOGIN = BASE_URL + "/user/login";
 const SIGNUP = BASE_URL + "/user/signup";
 const PROFILE = BASE_URL + "/user/profile";

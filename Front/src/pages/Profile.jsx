@@ -8,6 +8,7 @@ import { PROFILE } from "../constant/urls";
 import toast, { Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../store/userSlice";
+import { useNavigate } from "react-router";
 
 const formSubmitter = async function (prevState, form) {
   const userName = form.get("userName");
@@ -40,6 +41,7 @@ function Profile() {
   const profileImageRef = useRef();
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const changeProfileImage = (e) => {
     if (e.target.files.length === 0) {
@@ -65,6 +67,10 @@ function Profile() {
     }
   }, [state, dispatch]);
 
+  useEffect(() => {
+    if (!user) navigate("/");
+  }, [user, navigate]);
+
   return (
     <React.Fragment>
       {isPending && <Loader />}
@@ -76,7 +82,7 @@ function Profile() {
           <form action={formAction} className="mt-5 flex flex-col items-center">
             <div className="relative w-20 h-20 mb-3">
               <img
-                src={`http://localhost:8000/${user.profileImage}`}
+                src={`http://localhost:8000/${user?.profileImage}`}
                 alt="profile"
                 ref={profileImageRef}
                 className="border-2 border-white rounded-full mb-3 w-full h-full object-cover"
@@ -109,7 +115,7 @@ function Profile() {
                 type="text"
                 id="userName"
                 name="userName"
-                defaultValue={user.userName}
+                defaultValue={user?.userName}
                 className="border-2 border-yellow-600 rounded-md text-sm outline-none px-2 py-1"
               />
             </div>

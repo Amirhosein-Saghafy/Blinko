@@ -47,6 +47,7 @@ function Profile() {
     if (e.target.files.length === 0) {
       profileImageRef.current.setAttribute(
         "src",
+        // "/profile-default.png"
         "http://localhost:8000/profile-default.png"
       );
       return;
@@ -83,6 +84,7 @@ function Profile() {
             <div className="relative w-20 h-20 mb-3">
               <img
                 src={`http://localhost:8000/${user?.profileImage}`}
+                // src={`/${user?.profileImage}`}
                 alt="profile"
                 ref={profileImageRef}
                 className="border-2 border-white rounded-full mb-3 w-full h-full object-cover"

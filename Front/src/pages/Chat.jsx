@@ -149,6 +149,7 @@ function Chat() {
           <div className="flex items-center">
             <ProfileImage
               imagePath={`http://127.0.0.1:8000/${chat?.selectedUser?.profileImage}`}
+              // imagePath={`/${chat?.selectedUser?.profileImage}`}
               active={Object.keys(chat.onlineUsers).includes(userId)}
             />
             <div className="flex flex-col ml-3">
@@ -187,6 +188,7 @@ function Chat() {
                   <div className="w-10 h-10 relative ml-5">
                     <img
                       src={`http://127.0.0.1:8000/${myUser.profileImage}`}
+                      // src={`/${myUser.profileImage}`}
                       alt="profile"
                       className="w-full h-full rounded-full object-cover"
                     />
@@ -196,6 +198,7 @@ function Chat() {
                       <div className="px-5 py-3 bg-[#f7f7f7] rounded-t-2xl rounded-es-2xl ml-5">
                         <img
                           src={`http://127.0.0.1:8000/${message.image}`}
+                          // src={`/${message.image}`}
                           alt="message attachment"
                           className="max-w-96 max-h-48 object-cover rounded-md"
                         />
@@ -212,6 +215,7 @@ function Chat() {
                       <div className="px-5 py-3 bg-[#f7f7f7] rounded-t-2xl rounded-es-2xl ml-5">
                         <img
                           src={`http://127.0.0.1:8000/${message.image}`}
+                          // src={`/${message.image}`}
                           alt="message attachment"
                           className="max-w-96 max-h-48 object-cover rounded-md"
                         />
@@ -240,6 +244,7 @@ function Chat() {
                   <div className="w-10 h-10 relative mr-5">
                     <img
                       src={`http://127.0.0.1:8000/${chat?.selectedUser?.profileImage}`}
+                      // src={`/${chat?.selectedUser?.profileImage}`}
                       alt="profile"
                       className="w-full h-full rounded-full object-cover"
                     />
@@ -249,6 +254,7 @@ function Chat() {
                       <div className="px-5 py-3 bg-[#ecf3fe] rounded-t-2xl rounded-ee-2xl mr-5">
                         <img
                           src={`http://127.0.0.1:8000/${message.image}`}
+                          // src={`/${message.image}`}
                           alt="message attachment"
                           className="max-w-96 max-h-48 object-cover rounded-md"
                         />
@@ -265,6 +271,7 @@ function Chat() {
                       <div className="px-5 py-3 bg-[#ecf3fe] rounded-t-2xl rounded-ee-2xl mr-5">
                         <img
                           src={`http://127.0.0.1:8000/${message.image}`}
+                          // src={`/${message.image}`}
                           alt="message attachment"
                           className="max-w-96 max-h-48 object-cover rounded-md"
                         />

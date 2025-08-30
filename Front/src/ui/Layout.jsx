@@ -200,6 +200,7 @@ function Layout() {
                         >
                           <ProfileImage
                             imagePath={`http://127.0.0.1:8000/${user.profileImage}`}
+                            // imagePath={`/${user.profileImage}`}
                             active={Object.keys(chat.onlineUsers).includes(
                               user._id
                             )}

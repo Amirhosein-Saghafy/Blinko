@@ -1,6 +1,13 @@
 const userModel = require("../models/user");
 const bcrypt = require("bcryptjs");
 const { generateToken } = require("../lib/utils");
+const ImageKit = require("imagekit");
+
+const imagekit = new ImageKit({
+  publicKey: "public_7VpeEVy2O69CNG7eQp+Dvm7P6kQ=",
+  privateKey: "private_u+2hC7h67ni1dqe0Gn+6T3L58bM=",
+  urlEndpoint: "https://ik.imagekit.io/469kf2yok1/",
+});
 
 exports.login = async (req, res) => {
   let user = null;
@@ -142,14 +149,24 @@ exports.updateProfile = async (req, res) => {
     }
 
     if (file) {
-      user = await userModel.findOneAndUpdate(
-        {
-          userName: user.userName,
-          password: user.password,
-        },
-        { profileImage: file.filename },
-        { new: true }
-      );
+      try {
+        const response = await imagekit.upload({
+          file: `https://blinko-pir5.onrender.com/${file.filename}`,
+          fileName: file.filename,
+        });
+
+        user = await userModel.findOneAndUpdate(
+          {
+            userName: user.userName,
+            password: user.password,
+          },
+          // { profileImage: file.filename },
+          { profileImage: response.url },
+          { new: true }
+        );
+      } catch (error) {
+        console.log(error);
+      }
     }
 
     const userData = {

@@ -85,7 +85,7 @@ exports.sendMessage = async (req, res) => {
       try {
         const response = await imagekit.upload({
           file: `https://blinko-pir5.onrender.com/${req.file.filename}`,
-          fileName: file.filename,
+          fileName: req.file.filename,
         });
 
         message.image = response.url;

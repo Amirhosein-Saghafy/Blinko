@@ -74,7 +74,7 @@ exports.signup = async (req, res) => {
     const user = await userModel.create({
       userName: userCredentials.userName,
       password: hashedPassword,
-      profileImage: "profile-default.png",
+      profileImage: "https://ik.imagekit.io/469kf2yok1/profile-default.png",
     });
 
     if (user) {
